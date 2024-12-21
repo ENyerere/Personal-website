@@ -5,8 +5,8 @@
 	border-radius: 50%;
 	display: flex;
 	position: relative;
-	height: 50px;
-	width: 50px;
+	height: 100px;
+	width: 100px;
 	align-items: center;
 	justify-content: center;
 }
