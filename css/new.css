@@ -1,0 +1,12 @@
+.text-area{
+	font-family: 'Courier New', Courier, monospace;
+}
+.touxiang{
+	border-radius: 50%;
+	display: flex;
+	position: relative;
+	height: 50px;
+	width: 50px;
+	align-items: center;
+	justify-content: center;
+}
