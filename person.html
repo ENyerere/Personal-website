@@ -1,16 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>姚沈峄</title>
 		<link rel="stylesheet" href="css/new.css" />
 	</head>
 	<body>
-		<img class="touxiang" src="img/头像.JPG" alt="头像" />
-		<div class="text-area">
-			<h1>Hello,world!</h1>
-			<h3>This is my first bio page</h3>
-			<h6>Welcome to my personal introduction page, I am Yao Shenyi, a nobody from Zhejiang Vocational College of Economics and Trade, I will continue to update this page.</h6>
+		<div class="container">
+			<!-- 头像和标题 -->
+			<header>
+				<img src="img/头像.JPG" alt="Your Avatar" class="avatar" />
+				<h1>姚沈峄</h1>
+				<p>Student</p>
+			</header>
+
+			<!-- 关于我 -->
+			<section>
+				<h2>About Me</h2>
+				<p>
+					Welcome to my personal introduction page, I am Yao Shenyi, a nobody from Zhejiang Vocational College
+					of Economics and Trade.
+				</p>
+			</section>
+
+			<!-- 技能 -->
+			<section>
+				<h2>Skills</h2>
+				<ul class="skills">
+					<li>Software testing</li>
+					<li>Web front-end development</li>
+				</ul>
+			</section>
+
+			<!-- 联系方式和社交链接 -->
+			<link rel="stylesheet"
+				href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+			<section>
+				<h2>Contact</h2>
+				<ul class="social-links">
+					<li><a href="https://space.bilibili.com/438589744" target="_blank"><i class="fab fa-bilibili"></i>
+							Bilibili</a></li>
+					<li><a href="https://github.com/ENyerere" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+					</li>
+					<li><a href="mailto:yaoshenyi@outlook.com"><i class="fas fa-envelope"></i> Email</a></li>
+				</ul>
+			</section>
+			
+			<!-- 切换主题 -->
+			<button id="theme-toggle">切换主题</button>
+			
+			<!-- 页脚 -->
+			<footer>
+				<p>&copy; 2025 Yao Shenyi. All rights reserved.</p>
+				<p>Made with ❤️ using HTML, CSS, and JavaScript.</p>
+			</footer>
 		</div>
 	</body>
+	<script src="./js/new.js"></script>
 </html>

@@ -1,12 +1,164 @@
-.text-area{
-	font-family: 'Courier New', Courier, monospace;
+/* 全局样式 */
+body {
+	font-family: Arial, sans-serif;
+	line-height: 1.6;
+	margin: 0;
+	padding: 0;
+	background-color: #f9f9f9;
+	color: #333;
 }
-.touxiang{
+
+/* 容器 */
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 20px;
+	text-align: center;
+	animation: fadeIn 1s ease-out;
+}
+
+/* 头像样式 */
+.avatar {
+	width: 150px;
+	height: 150px;
 	border-radius: 50%;
-	display: flex;
-	position: relative;
-	height: 100px;
-	width: 100px;
-	align-items: center;
-	justify-content: center;
+	margin-bottom: 20px;
+}
+
+/* 切换主题按钮样式 */
+#theme-toggle {
+	background: linear-gradient(to right, #007bff, #0056a3);
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#theme-toggle:hover {
+	transform: scale(1.05);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* 暗色模式下的按钮样式 */
+body.dark-theme #theme-toggle {
+	background: linear-gradient(to right, #ff5722, #e040fb);
+	color: black;
+}
+
+body.dark-theme #theme-toggle:hover {
+	transform: scale(1.05);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* 标题样式 */
+h1 {
+	font-size: 2.5rem;
+	margin-bottom: 10px;
+}
+
+h2 {
+	font-size: 1.8rem;
+	margin-top: 30px;
+	margin-bottom: 15px;
+	color: #444;
+}
+
+p {
+	font-size: 1rem;
+	color: #555;
+	margin-bottom: 20px;
+}
+
+/* 技能列表 */
+ul.skills {
+	list-style: none;
+	padding: 0;
+}
+
+ul.skills li {
+	font-size: 1rem;
+	margin: 5px 0;
+}
+
+/* 社交链接 */
+.social-links {
+	list-style: none;
+	padding: 0;
+	margin-top: 20px;
+}
+
+.social-links li {
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.social-links a {
+	text-decoration: none;
+	color: #0077cc;
+	font-size: 1rem;
+}
+
+.social-links a:hover {
+	color: #0056a3;
+	text-decoration: underline;
+}
+
+/* 页脚样式 */
+footer {
+	margin-top: 40px;
+	font-size: 0.9rem;
+	color: #888;
+}
+
+@media (max-width: 768px) {
+	.container {
+		padding: 10px;
+	}
+
+	h1 {
+		font-size: 2rem;
+	}
+
+	h2 {
+		font-size: 1.6rem;
+	}
+
+	p {
+		font-size: 0.9rem;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 114514;
+	}
+}
+
+/* 黑色主题 */
+body.dark-theme {
+	background-color: #333;
+	color: #f0f0f0;
+}
+
+h2.dark-theme {
+	color: #f0f0f0;
+}
+
+p.dark-theme {
+	color: #f0f0f0;
+}
+
+/* 过渡动画 */
+body,
+h2,
+p {
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
