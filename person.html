@@ -1,186 +1,201 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
-		<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>姚沈峄</title>
-		<link rel="stylesheet" href="css/new.css" />
-		<!-- favicon图标 -->
-		<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-		<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
-		<link rel="manifest" href="./site.webmanifest">
-		<style>
-			body {
-				position: relative;
-				margin: 0;
-				min-height: 100vh;
-			}
 
-			#wave-background {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				z-index: -1;
-				background: #fff;
-			}
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>姚沈峄</title>
 
-			.container {
-				position: relative;
-				z-index: 1;
-			}
-		</style>
-	</head>
-	<body>
-		<!-- 滚动进度指示器 -->
-		<div class="scroll-progress"></div>
+	<!-- 核心样式 -->
+	<link rel="stylesheet" href="css/new.css" />
 
-		<!-- 自定义鼠标 -->
-		<div class="cursor"></div>
-		<div class="cursor-follower"></div>
+	<!-- 图标库 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-		<!-- 聚焦效果 -->
-		<div class="focus-effect"></div>
+	<!-- favicon图标 -->
+	<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+	<link rel="manifest" href="./site.webmanifest">
 
-		<!-- 回到顶部按钮 -->
-		<div class="back-to-top">
-			<i class="fas fa-arrow-up"></i>
+	<!-- React库 -->
+	<script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+	<script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+	<style>
+		body {
+			position: relative;
+			margin: 0;
+			min-height: 100vh;
+		}
+
+		#wave-background {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: -1;
+			background: #fff;
+		}
+
+		.container {
+			position: relative;
+			z-index: 1;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- UI交互元素 -->
+	<div class="scroll-progress"></div>
+	<div class="cursor"></div>
+	<div class="cursor-follower"></div>
+	<div class="focus-effect"></div>
+	<div class="back-to-top">
+		<i class="fas fa-arrow-up"></i>
+	</div>
+
+	<!-- 欢迎屏幕 -->
+	<div class="welcome-screen">
+		<div class="welcome-text">
+			<span class="welcome-emoji">👋</span>你好!
+		</div>
+	</div>
+
+	<!-- 内容包装器 -->
+	<div class="content-wrapper">
+		<!-- 主题切换动画覆盖层 -->
+		<div class="theme-transition-overlay"></div>
+
+		<!-- 主题切换按钮 -->
+		<div class="theme-toggle-wrapper">
+			<button id="theme-toggle">切换主题</button>
 		</div>
 
-		<!-- 欢迎屏幕 -->
-		<div class="welcome-screen">
-			<div class="welcome-text">
-				<span class="welcome-emoji">👋</span>你好!
-			</div>
-		</div>
+		<!-- 背景波浪 -->
+		<svg id="wave-background" xmlns="http://www.w3.org/2000/svg" width="565.66" height="400"
+			overflow="visible"></svg>
 
-		<!-- 内容包装器 -->
-		<div class="content-wrapper">
-			<!-- 主题切换动画覆盖层 -->
-			<div class="theme-transition-overlay"></div>
+		<!-- 主要内容区域 -->
+		<div class="container">
+			<!-- 头像和标题 -->
+			<header>
+				<div class="avatar-container">
+					<img src="img/头像.JPG" alt="avatar" class="avatar" />
+				</div>
+				<h1>姚沈峄</h1>
+				<p>Student</p>
+			</header>
 
-			<!-- 主题切换按钮 - 移至顶部 -->
-			<div class="theme-toggle-wrapper">
-				<button id="theme-toggle">切换主题</button>
-			</div>
+			<!-- 关于我 -->
+			<section class="section-animate">
+				<h2>About Me</h2>
+				<p>
+					Welcome to my personal introduction page, I am Yao Shenyi, a nobody from Zhejiang Vocational
+					College of Economics and Trade.
+				</p>
+			</section>
 
-			<svg id="wave-background" xmlns="http://www.w3.org/2000/svg" width="565.66" height="400"
-				overflow="visible"></svg>
-			<div class="container">
-				<!-- 头像和标题 -->
-				<header>
-					<div class="avatar-container">
-						<img src="img/头像.JPG" alt="avatar" class="avatar" />
-					</div>
-					<h1>姚沈峄</h1>
-					<p>Student</p>
-				</header>
-
-				<!-- 关于我 -->
-				<section class="section-animate">
-					<h2>About Me</h2>
-					<p>
-						Welcome to my personal introduction page, I am Yao Shenyi, a nobody from Zhejiang Vocational
-						College
-						of Economics and Trade.
-					</p>
-				</section>
-
-				<!-- 技能 -->
-				<section class="section-animate">
-					<h2>Skills</h2>
-					<div class="skills-container">
-						<ul class="skills">
-							<li>Software testing</li>
-							<li>C/C++</li>
-							<li>Python</li>
-							<li>PHP</li>
-							<li>Java</li>
-							<li>HTML</li>
-							<li>JavaScript</li>
-							<li>React</li>
-							<li>CSS3</li>
-						</ul>
-					</div>
-				</section>
-
-				<!-- 项目 -->
-				<section class="section-animate">
-					<h2>projects</h2>
-					<div class="projects-container">
-						<div class="project-card">
-							<div class="image-container">
-								<img src="img/头像.JPG" alt="项目预览图">
-								<div class="project-description">
-									易社区旨在打造一个简洁、易用的社区平台。
-								</div>
-							</div>
-							<h3>易社区</h3>
-							<div class="tech-stack">
-								<span class="tech-tag">HTML</span>
-								<span class="tech-tag">CSS</span>
-								<span class="tech-tag">JavaScript</span>
-							</div>
-						</div>
-						<div class="project-card">
-							<div class="image-container">
-								<img src="img/头像.JPG" alt="项目预览图">
-								<div class="project-description">
-									完美解决大学生中饭晚饭吃什么的世纪难题。
-								</div>
-							</div>
-							<h3>EAT WHAT</h3>
-							<div class="tech-stack">
-								<span class="tech-tag">React</span>
-								<span class="tech-tag">Node.js</span>
-								<span class="tech-tag">MongoDB</span>
-							</div>
-						</div>
-						<div class="project-card">
-							<div class="image-container">
-								<img src="img/头像.JPG" alt="项目预览图">
-								<div class="project-description">
-									暂无。
-								</div>
-							</div>
-							<h3>暂无</h3>
-							<div class="tech-stack">
-								<span class="tech-tag">Vue</span>
-								<span class="tech-tag">TypeScript</span>
-								<span class="tech-tag">Express</span>
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<!-- 联系方式和社交链接 -->
-				<link rel="stylesheet"
-					href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-				<section class="section-animate">
-					<h2>Contact</h2>
-					<ul class="social-links">
-						<li><a href="https://space.bilibili.com/438589744" target="_blank"><i
-									class="fab fa-bilibili"></i>
-								Bilibili</a></li>
-						<li><a href="https://github.com/ENyerere" target="_blank"><i class="fab fa-github"></i>
-								GitHub</a>
-						</li>
-						<li><a href="mailto:yaoshenyi@outlook.com"><i class="fas fa-envelope"></i> Email</a></li>
+			<!-- 技能 -->
+			<section class="section-animate">
+				<h2>Skills</h2>
+				<div class="skills-container">
+					<ul class="skills">
+						<li>Software testing</li>
+						<li>C/C++</li>
+						<li>Python</li>
+						<li>PHP</li>
+						<li>Java</li>
+						<li>HTML</li>
+						<li>JavaScript</li>
+						<li>React</li>
+						<li>CSS3</li>
 					</ul>
-				</section>
+				</div>
+			</section>
 
-				<!-- 页脚 -->
-				<footer>
-					<p>&copy; 2025 Yao Shenyi. All rights reserved.</p>
-					<p>Made with <span class="heart">❤️</span> using HTML, CSS, and JavaScript.</p>
-				</footer>
-			</div>
+			<!-- 项目 -->
+			<section class="section-animate">
+				<h2>Projects</h2>
+				<div class="projects-container">
+					<div class="project-card">
+						<div class="image-container">
+							<img src="img/头像.JPG" alt="项目预览图">
+							<div class="project-description">
+								易社区旨在打造一个简洁、易用的社区平台。
+							</div>
+						</div>
+						<h3>易社区</h3>
+						<div class="tech-stack">
+							<span class="tech-tag">HTML</span>
+							<span class="tech-tag">CSS</span>
+							<span class="tech-tag">JavaScript</span>
+						</div>
+					</div>
+					<div class="project-card">
+						<div class="image-container">
+							<img src="img/头像.JPG" alt="项目预览图">
+							<div class="project-description">
+								完美解决大学生中饭晚饭吃什么的世纪难题。
+							</div>
+						</div>
+						<h3>EAT WHAT</h3>
+						<div class="tech-stack">
+							<span class="tech-tag">React</span>
+							<span class="tech-tag">Node.js</span>
+							<span class="tech-tag">MongoDB</span>
+						</div>
+					</div>
+					<div class="project-card">
+						<div class="image-container">
+							<img src="img/头像.JPG" alt="项目预览图">
+							<div class="project-description">
+								暂无。
+							</div>
+						</div>
+						<h3>暂无</h3>
+						<div class="tech-stack">
+							<span class="tech-tag">Vue</span>
+							<span class="tech-tag">TypeScript</span>
+							<span class="tech-tag">Express</span>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- 联系方式和社交链接 -->
+			<section class="section-animate">
+				<h2>Contact</h2>
+				<ul class="social-links">
+					<li>
+						<a href="https://space.bilibili.com/438589744" target="_blank">
+							<i class="fab fa-bilibili"></i> Bilibili
+						</a>
+					</li>
+					<li>
+						<a href="https://github.com/ENyerere" target="_blank">
+							<i class="fab fa-github"></i> GitHub
+						</a>
+					</li>
+					<li>
+						<a href="mailto:yaoshenyi@outlook.com">
+							<i class="fas fa-envelope"></i> Email
+						</a>
+					</li>
+				</ul>
+			</section>
+
+			<!-- 页脚 -->
+			<footer>
+				<p>&copy; 2025 Yao Shenyi. All rights reserved.</p>
+				<p>Made with <span class="heart">❤️</span> using HTML, CSS, and JavaScript.</p>
+			</footer>
 		</div>
-	</body>
+	</div>
+
+	<!-- JavaScript -->
 	<script src="./js/new.js"></script>
+</body>
+
 </html>

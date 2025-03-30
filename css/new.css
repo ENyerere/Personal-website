@@ -1,3 +1,37 @@
+/* ===== 颜色与主题变量 ===== */
+:root {
+	/* 主要颜色 */
+	--primary-color: #007bff;
+	--primary-light: #00e1ff;
+	--secondary-color: #555;
+	--text-color: #333;
+	--bg-color: #f9f9f9;
+	--card-bg: rgba(255, 255, 255, 0.8);
+
+	/* 暗色主题颜色 */
+	--dark-primary: #ff5722;
+	--dark-primary-light: #e040fb;
+	--dark-text: #e0e0e0;
+	--dark-bg: #1a1a1a;
+	--dark-card-bg: rgba(40, 40, 40, 0.8);
+
+	/* 交互颜色 */
+	--hover-shadow: rgba(0, 123, 255, 0.25);
+	--dark-hover-shadow: rgba(255, 87, 34, 0.25);
+
+	/* 动画时间 */
+	--transition-fast: 0.3s;
+	--transition-normal: 0.5s;
+	--transition-slow: 0.8s;
+}
+
+/* ===== 重置与基础样式 ===== */
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
 /* 全局样式 */
 body {
 	font-family: Arial, sans-serif;
@@ -5,7 +39,7 @@ body {
 	margin: 0;
 	padding: 0;
 	background-color: transparent;
-	color: #333;
+	color: var(--text-color);
 	min-height: 100vh;
 	position: relative;
 	scroll-behavior: smooth;
@@ -51,7 +85,7 @@ ul.skills li,
 	width: 100%;
 	height: 100%;
 	z-index: -1;
-	background-color: #f9f9f9;
+	background-color: var(--bg-color);
 	border: none;
 	/* 移除边框 */
 }
@@ -65,7 +99,7 @@ ul.skills li,
 	animation: fadeIn 1s ease-out;
 	position: relative;
 	z-index: 1;
-	background-color: rgba(255, 255, 255, 0.8);
+	background-color: var(--card-bg);
 	border-radius: 16px;
 	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 5px rgba(0, 0, 0, 0.05);
 	backdrop-filter: blur(10px);
@@ -79,19 +113,29 @@ ul.skills li,
 	height: 150px;
 	border-radius: 50%;
 	margin-bottom: 20px;
+	transition: transform var(--transition-normal) ease;
+}
+
+.avatar:hover {
+	transform: scale(1.05);
+}
+
+.avatar-container {
+	position: relative;
+	display: inline-block;
+	margin-bottom: 10px;
 }
 
 /* 切换主题按钮样式 */
 #theme-toggle {
 	background: rgba(0, 123, 255, 0.1);
-	color: #007bff;
+	color: var(--primary-color);
 	border: none;
 	padding: 8px 16px;
 	font-size: 0.9rem;
-	cursor: pointer;
 	border-radius: 25px;
 	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-	transition: all 0.3s ease;
+	transition: all var(--transition-fast) ease;
 	position: relative;
 	overflow: hidden;
 	font-weight: 500;
@@ -107,12 +151,12 @@ ul.skills li,
 	width: 100%;
 	height: 100%;
 	background: linear-gradient(to right, rgba(0, 123, 255, 0.1), rgba(0, 123, 255, 0.2), rgba(0, 123, 255, 0.1));
-	transition: all 0.5s ease;
+	transition: all var(--transition-normal) ease;
 }
 
 #theme-toggle:hover {
 	transform: translateY(-3px);
-	box-shadow: 0 5px 15px rgba(0, 123, 255, 0.25);
+	box-shadow: 0 5px 15px var(--hover-shadow);
 	background: rgba(0, 123, 255, 0.15);
 }
 
@@ -123,7 +167,7 @@ ul.skills li,
 /* 暗色模式下的按钮样式 */
 body.dark-theme #theme-toggle {
 	background: rgba(255, 87, 34, 0.1);
-	color: #ff5722;
+	color: var(--dark-primary);
 	box-shadow: 0 2px 8px rgba(255, 87, 34, 0.15);
 }
 
@@ -133,14 +177,14 @@ body.dark-theme #theme-toggle::before {
 
 body.dark-theme #theme-toggle:hover {
 	background: rgba(255, 87, 34, 0.15);
-	box-shadow: 0 5px 15px rgba(255, 87, 34, 0.25);
+	box-shadow: 0 5px 15px var(--dark-hover-shadow);
 }
 
 /* 标题样式增强 */
 h1 {
 	font-size: 2.5rem;
 	margin-bottom: 10px;
-	background: linear-gradient(to right, #007bff, #00e1ff);
+	background: linear-gradient(to right, var(--primary-color), var(--primary-light));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
@@ -167,13 +211,13 @@ h2::after {
 	transform: translateX(-50%);
 	width: 60px;
 	height: 3px;
-	background: linear-gradient(to right, #007bff, #00e1ff);
+	background: linear-gradient(to right, var(--primary-color), var(--primary-light));
 	border-radius: 3px;
 }
 
 /* 暗色主题标题样式 */
 body.dark-theme h1 {
-	background: linear-gradient(to right, #ff5722, #e040fb);
+	background: linear-gradient(to right, var(--dark-primary), var(--dark-primary-light));
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
@@ -182,12 +226,12 @@ body.dark-theme h1 {
 }
 
 body.dark-theme h2::after {
-	background: linear-gradient(to right, #ff5722, #e040fb);
+	background: linear-gradient(to right, var(--dark-primary), var(--dark-primary-light));
 }
 
 p {
 	font-size: 1rem;
-	color: #555;
+	color: var(--secondary-color);
 	margin-bottom: 20px;
 }
 
