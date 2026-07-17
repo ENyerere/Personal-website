@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8" />
+	<title>重定向中…</title>
+	<!--
+		SPA 深链接回退(GitHub Pages):
+		静态托管对 /posts/xxx 等前端路由返回 404。本页把原始路径编码进
+		query string 并重定向回 index.html,由其中的解码脚本还原路由。
+		参考:https://github.com/rafgraph/spa-github-pages
+
+		注意:pathSegmentsToKeep = 0 适用于自定义域名或
+		<username>.github.io 根路径部署。若部署到项目页
+		(<username>.github.io/easy-web/),请改为 1,
+		并同步设置 vite.config.ts 的 base = '/easy-web/'。
+	-->
+	<script type="text/javascript">
+		var pathSegmentsToKeep = 0;
+
+		var l = window.location;
+		l.replace(
+			l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+			l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+			l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+			(l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+			l.hash
+		);
+	</script>
+</head>
+
+<body>
+</body>
+
+</html>
