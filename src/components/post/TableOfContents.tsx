@@ -7,7 +7,7 @@ interface TableOfContentsProps {
 
 /**
  * 文章页右栏目录(hairline 风格)
- * - 2xl 断点显示、sticky 定位(由外层布局控制)
+ * - xl 断点显示、sticky 定位(由外层布局控制)
  * - 当前章节:字重 + 左侧短粗线指示,不用色块
  * - IntersectionObserver 追踪阅读位置;点击平滑滚动,reduced-motion 时瞬时跳转
  */

@@ -46,9 +46,9 @@ export default function PostPage() {
   const readTime = Math.max(1, Math.ceil(wordCount / 300))
 
   return (
-    <div className="py-4 md:py-6 2xl:grid 2xl:grid-cols-[1fr_minmax(0,42rem)_1fr] 2xl:gap-8">
+    <div className="py-4 md:py-6 xl:grid xl:grid-cols-[1fr_minmax(0,42rem)_1fr] xl:gap-8">
       {/* 中栏:居中阅读栏(measure 约 68 字符) */}
-      <div className="2xl:col-start-2 w-full max-w-[42rem] mx-auto 2xl:mx-0">
+      <div className="xl:col-start-2 w-full max-w-[42rem] mx-auto xl:mx-0">
         {/* 返回链接:纯文字,与内容左缘对齐 */}
         <Link
           to="/"
@@ -168,9 +168,9 @@ export default function PostPage() {
         )}
       </div>
 
-      {/* 右栏:TOC 目录(2xl 断点显示,sticky 定位) */}
+      {/* 右栏:TOC 目录(xl 断点显示——覆盖笔记本宽度,sticky 定位) */}
       {tocItems.length > 0 && (
-        <aside className="hidden 2xl:block 2xl:col-start-3">
+        <aside className="hidden xl:block xl:col-start-3">
           <div className="sticky top-20">
             <TableOfContents items={tocItems} />
           </div>

@@ -100,7 +100,7 @@ brand
 
 - 单栏居中阅读栏(measure 约 68 字符),左右留白充足
 - 文章头部:标题(逐行揭示动画)→ YAML 元数据块 → hairline → 正文
-- 右栏 TOC(2xl 断点):hairline 风格,当前章节用字重 + 左侧短粗线指示,不用色块
+- 右栏 TOC(xl 断点,覆盖笔记本宽度):hairline 风格,当前章节用字重 + 左侧短粗线指示,不用色块
 - 上一篇/下一篇:hairline 分隔的文字链接行,不用卡片
 
 ### 移动端
@@ -143,7 +143,8 @@ brand
 
 ## Accessibility
 
-- WCAG AA:正文对比度 ≥4.5:1(ink/paper 天然满足),大字 ≥3:1
+- 正文与标题对比度 ≥4.5:1(ink/paper 天然满足),大字 ≥3:1
+- **静音文字刻意低于 AA**:ink-3(亮色 `#999999` / 暗色 `#737373`)对比度约 2.7–3:1,仅用于元数据、标签、辅助说明等非关键信息——这是「静音」气质的明确取舍,关键信息与可操作元素不使用 muted 色
 - 完整支持 `prefers-reduced-motion`(见 Motion 降级)
 - 语义化 HTML、键盘可达、focus 态可见(`outline` 单色,不依赖颜色单独传达信息)
 - 过滤器的激活态除 bracket 外同步 `aria-pressed`;TOC 当前章节 `aria-current`
