@@ -33,7 +33,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /easy-web/
+          VITE_BASE: /Personal-website/
 
       - uses: actions/configure-pages@v5
 
