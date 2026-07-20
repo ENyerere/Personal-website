@@ -39,3 +39,4 @@ published: false          # 可选,默认 true;false 时为草稿不上线
 - 正文章节标题从 `##`(h2)开始,h2/h3 会自动生成锚点并进入右侧目录
 - 文件名即默认 slug,建议用英文小写加连字符,如 `react-refactor-notes.md`
 - 草稿(`published: false`)不会出现在任何列表与路由中
+- 每次构建会自动生成 `feed.xml`(RSS 2.0,取最新 20 篇已发布文章),无需手动维护;`excerpt` 即订阅源里的摘要,建议认真填写

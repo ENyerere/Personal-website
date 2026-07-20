@@ -30,6 +30,10 @@ export default function Footer() {
               </a>
             )
           })}
+          {/* RSS 订阅入口(构建期生成 feed.xml,BASE_URL 兼容 Pages 子路径) */}
+          <a href={`${import.meta.env.BASE_URL}feed.xml`} className="u-line text-lg md:text-xl">
+            RSS
+          </a>
         </div>
         <div className="pt-6 border-t border-background/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-sm opacity-60">
           <p>&copy; {new Date().getFullYear()} {profile.name}</p>
