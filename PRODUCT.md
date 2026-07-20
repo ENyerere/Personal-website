@@ -74,7 +74,7 @@ brand
 
 - **标题**:系统黑体 + 字重区分,字距收紧 `letter-spacing: -0.015em`(大标题可到 `-0.03em`);中文标题不斜体(中文无真斜体)
 - **标签体系**:拉丁小标签用 12px / 600 / uppercase / tracking 0.08em;中文标签用同字号 + 字重 500,不强行大写
-- **YAML 元数据块**(签名元素):文章头部元信息以 front-matter 形式排布——标签名等宽、固定宽度(约 6em,`flex-shrink: 0`),值内联同行;如 `date: 2025-03-15` / `tags: [随笔, 个人]` / `words: 299`
+- **YAML 元数据块**(签名元素):文章头部元信息以 front-matter 形式排布——标签名等宽、固定宽度(约 6em,`flex-shrink: 0`),值内联同行;如 `date: 2025-03-15` / `tags: [随笔, 个人]` / `series: [博客改造日志] 第 1 / 3 篇` / `words: 299` / `time: 1 min` / `rev: 7cfaf82`
 - **正文**:18px 桌面 / 16px 移动,行高 1.75,measure 约 68 字符
 - **代码**:JetBrains Mono,明暗主题下均置于深色 `paper-2` 背景
 
@@ -123,7 +123,7 @@ brand
 
 - 列表条目入场:opacity + translateY(8px),错峰 `index × 100ms`,400ms,一次性
 - 过滤切换:不匹配条目衰减至 `opacity: 0.3`(不移除、不重排),300ms
-- 社交/页脚链接:下划线从左到右生长的 hover 动画(200ms)
+- 社交/页脚链接:下划线从左到右生长的 hover 动画(200ms);线高 2px(1px 在半像素对齐时会被抗锯齿拆淡,已修复)
 - 滚动进度条、回到顶部:保留现有实现,样式改为 hairline/单色
 
 ### 降级
@@ -134,6 +134,8 @@ brand
 
 - **基础组件**:继续使用 shadcn/ui(Button/Badge/Sheet/NavigationMenu 等),但皮肤重写:无圆角(或小至 2px)、无阴影、hairline 边框、单色
 - **过滤器约定**(标签/分类):文字按钮,激活态用 bracket 包裹——`> 前端 <`(`::before`/`::after` 注入),非激活为纯文字;不用 Badge 色块
+- **检索条**(首页):hairline 底线输入,mono 字体;检索标题/摘要/标签/正文,与标签过滤叠加,未命中条目衰减;`/` 聚焦、`Esc` 清空
+- **系列约定**:front matter `series` 字段;文章页元数据块 `series: [名] 第 N / M 篇`;合集页 `/series/:name` 按时间正序;首页条目元信息行标注「系列名 · 其一/其二」;前后篇导航系列内优先、边界退回全站
 - **展开/收起**(details/summary):自定义 `+` / `×` 标记(`::after`),展开态标记旋转或变色(单色内)
 - **返回链接**:纯文字 `← 返回`,置于内容块上方,与内容左缘对齐(现行做法,保留)
 - **版本链**(可选,配合功能候选 F4):文章元数据块附 git 风格短 hash,链接到该文历史版本
@@ -153,14 +155,21 @@ brand
 | # | 功能 | 说明 | 工作量 |
 |---|---|---|---|
 | F1 | 标签/分类过滤升级 | 归档页按标签过滤,bracket 约定 + opacity 衰减交互 | 小(✅ 已完成,首页) |
-| F2 | 全文搜索 | 页头搜索入口,按标题/摘要/正文匹配,键盘 `/` 唤起 | 中 |
+| F2 | 全文搜索 | 首页检索条,按标题/摘要/标签/正文匹配,与标签过滤叠加,`/` 唤起 | 中(✅ 已完成) |
 | F3 | 内容管线 | 文章从 TS 硬编码迁到 `.md` 文件构建期加载,写作即提交 | 中(✅ 已完成) |
 | F4 | 文章版本历史 | 元数据块挂 git 短 hash,链到 GitHub 提交历史 | 小(✅ 已完成,构建期注入) |
-| F5 | RSS / Atom 订阅 | 构建期生成 feed | 小 |
-| F6 | 系列文章 | 同一主题多篇文章串联,文章页顶部系列导航 | 中 |
+| F5 | RSS / Atom 订阅 | 构建期生成 feed.xml,页脚入口 + 自动发现声明 | 小(✅ 已完成) |
+| F6 | 系列文章 | front matter `series` 字段;元数据块 series 行 + `/series/:name` 合集页 + 系列感知前后篇导航 | 中(✅ 已完成) |
 | F7 | 阅读统计增强 | 归档页按年/标签的文章数与字数统计行 | 小 |
 
 明确不做:评论区(引入第三方或后端,违背最低维护成本)、点赞/浏览量(无后端且与手稿气质不符)、AI 摘要(内容应由作者声音承载)。
+
+## Deployment
+
+- **托管**:GitHub Pages,https://enyerere.github.io/Personal-website/ ;push main 经 GitHub Actions 自动构建部署(`.github/workflows/deploy.yml`)
+- **子路径**:Pages 构建注入 `VITE_BASE=/Personal-website/`;本地预览保持根路径。`index.html` 中的静态资源引用(favicon、manifest、feed)一律用绝对地址——SPA 深链接下根相对路径会解析错误
+- **SPA 深链接**:`public/404.html` 编码 + `index.html` 解码脚本回退
+- **构建期注入**:文章 git 版本(virtual:post-revisions,checkout 需 `fetch-depth: 0`)+ `dist/feed.xml`(RSS 2.0,最新 20 篇已发布文章)
 
 ## Migration Notes(从现风格迁移的影响面)
 
