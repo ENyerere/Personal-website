@@ -23,24 +23,28 @@ export default function Header() {
   const isActive = (to: string) => pathname === to
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur-md">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="text-xl font-semibold tracking-tight text-foreground hover:text-primary transition-colors">
+    <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
+      <div className="w-full max-w-[var(--page-width)] mx-auto px-6 md:px-8 flex h-16 items-center justify-between">
+        <Link
+          to="/"
+          className="font-mono text-base font-semibold tracking-tight text-foreground hover:underline underline-offset-4"
+        >
           {profile.name}
         </Link>
 
-        {/* 桌面端导航 */}
+        {/* 桌面端导航:激活态 = 墨色 + 下划线,非激活 = 静音 */}
         <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList className="gap-1">
+          <NavigationMenuList className="gap-6">
             {navItems.map((item) => (
               <NavigationMenuItem key={item.to}>
                 <NavigationMenuLink asChild>
                   <Link
                     to={item.to}
-                    className={`px-3 py-1.5 text-sm transition-colors rounded-md ${
+                    aria-current={isActive(item.to) ? 'page' : undefined}
+                    className={`text-sm transition-colors underline-offset-4 ${
                       isActive(item.to)
-                        ? 'text-primary font-medium'
-                        : 'text-muted-foreground hover:text-foreground'
+                        ? 'text-foreground font-medium underline'
+                        : 'text-muted-foreground hover:text-foreground hover:underline'
                     }`}
                   >
                     {item.label}
@@ -59,16 +63,17 @@ export default function Header() {
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <nav className="flex flex-col gap-2 mt-10">
+            <SheetContent side="right" className="border-l border-border">
+              <nav className="flex flex-col gap-1 mt-10">
                 {navItems.map((item) => (
                   <SheetClose asChild key={item.to}>
                     <Link
                       to={item.to}
-                      className={`px-3 py-2 text-base transition-colors rounded-md ${
+                      aria-current={isActive(item.to) ? 'page' : undefined}
+                      className={`px-1 py-2.5 text-base transition-colors border-b border-border/60 ${
                         isActive(item.to)
-                          ? 'text-primary font-medium bg-primary/5'
-                          : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                          ? 'text-foreground font-medium'
+                          : 'text-muted-foreground hover:text-foreground'
                       }`}
                     >
                       {item.label}

@@ -1,58 +1,43 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { initialPosts } from '@/data/posts'
+import { contentPosts } from '@/content/posts'
 
 export interface Post {
   id: string
   title: string
   slug: string
   excerpt: string
-  content: string // Markdown 字符串
+  content: string // Markdown 字符串(不含 front matter)
   tags: string[]
   createdAt: string // ISO 8601 字符串
   updatedAt: string // ISO 8601 字符串
   published: boolean
+  /** 版本信息:hash 为空串表示未提交(draft);null 表示 git 不可用(页面隐藏 rev 行) */
+  revision: { hash: string; count: number; historyUrl: string } | null
 }
 
 interface PostState {
   posts: Post[]
-  // 操作（MVP 阶段暂不实现 CRUD UI，但保留接口）
+  // 会话内操作(不持久化)。文章权威数据源是 src/content/posts/*.md,
+  // 持久化缓存只会造成旧访客看到陈旧内容,故 F3 内容管线后已移除 persist。
   addPost: (post: Post) => void
   updatePost: (slug: string, updates: Partial<Post>) => void
   deletePost: (slug: string) => void
 }
 
-export const usePostStore = create<PostState>()(
-  persist(
-    (set) => ({
-      posts: initialPosts, // 初始加载示例文章
-      addPost: (post) => set((state) => ({ posts: [...state.posts, post] })),
-      updatePost: (slug, updates) =>
-        set((state) => ({
-          posts: state.posts.map((p) => (p.slug === slug ? { ...p, ...updates } : p)),
-        })),
-      deletePost: (slug) =>
-        set((state) => ({ posts: state.posts.filter((p) => p.slug !== slug) })),
-    }),
-    {
-      name: 'easy-web-posts-v2',
-      version: 2,
-      // MVP 阶段:initialPosts 是权威数据源。版本升级时重置本地缓存,
-      // 保证老访客能看到示例文章的更新;后续接入真正的内容管线后,
-      // 应改为按 slug 合并而非整体重置。
-      migrate: (persistedState, version) => {
-        if (version < 2) {
-          return { posts: initialPosts }
-        }
-        return persistedState as PostState
-      },
-    }
-  )
-)
+export const usePostStore = create<PostState>()((set) => ({
+  posts: contentPosts, // 构建期从 .md 文件加载
+  addPost: (post) => set((state) => ({ posts: [...state.posts, post] })),
+  updatePost: (slug, updates) =>
+    set((state) => ({
+      posts: state.posts.map((p) => (p.slug === slug ? { ...p, ...updates } : p)),
+    })),
+  deletePost: (slug) =>
+    set((state) => ({ posts: state.posts.filter((p) => p.slug !== slug) })),
+}))
 
-// 选择器函数（纯函数，便于在组件中调用）
+// 选择器函数(纯函数,便于在组件中调用)
 
-// 获取已发布文章，按 createdAt 倒序
+// 获取已发布文章,按 createdAt 倒序
 export function getPosts(posts: Post[]): Post[] {
   return posts
     .filter((p) => p.published)
@@ -69,7 +54,7 @@ export function getPostsByTag(posts: Post[], tag: string): Post[] {
   return getPosts(posts).filter((p) => p.tags.includes(tag))
 }
 
-// 获取所有标签（去重，按文章数倒序）
+// 获取所有标签(去重,按文章数倒序)
 export function getAllTags(posts: Post[]): { tag: string; count: number }[] {
   const map = new Map<string, number>()
   getPosts(posts).forEach((p) => {

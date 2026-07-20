@@ -32,24 +32,27 @@ function createComponents(idMap: Map<number, string>): Components {
     ul: ({ node, ...props }) => <ul className="list-disc pl-6 mb-6 leading-8 text-foreground/90 space-y-1" {...props} />,
     ol: ({ node, ...props }) => <ol className="list-decimal pl-6 mb-6 leading-8 text-foreground/90 space-y-1" {...props} />,
     blockquote: ({ node, ...props }) => (
-      <blockquote className="border-l-2 border-primary/40 pl-6 my-6 italic text-muted-foreground" {...props} />
+      // 中文不使用斜体:以细线 + 静音色呈现引用
+      <blockquote className="border-l-2 border-border pl-5 my-6 text-muted-foreground" {...props} />
     ),
     code: ({ node, className, children, ...props }) => {
       const isInline = !className
-      if (isInline) return <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-sm text-primary" {...props}>{children}</code>
+      if (isInline) return <code className="bg-secondary px-1.5 py-0.5 rounded-sm font-mono text-sm" {...props}>{children}</code>
       return <code className={`${className} font-mono`} {...props}>{children}</code>
     },
     pre: ({ node, ...props }) => (
-      <pre className="bg-muted p-4 rounded-lg overflow-x-auto mb-6 text-sm border-l-2 border-primary/30 my-6 font-mono" {...props} />
+      // 代码块:明暗主题均为深色,无圆角无彩色边条
+      <pre className="bg-[rgb(var(--codeblock-bg))] text-[#c4c4c4] p-4 rounded-sm overflow-x-auto my-6 text-sm font-mono" {...props} />
     ),
-    a: ({ node, ...props }) => <a className="text-primary hover:underline underline-offset-2" target="_blank" rel="noopener noreferrer" {...props} />,
+    // 链接:继承墨色,常显下划线,hover 加粗下划线(不靠变色)
+    a: ({ node, ...props }) => <a className="text-foreground underline underline-offset-[3px] decoration-1 hover:decoration-2" target="_blank" rel="noopener noreferrer" {...props} />,
     table: ({ node, ...props }) => <table className="w-full border-collapse mb-6 text-sm" {...props} />,
-    thead: ({ node, ...props }) => <thead className="bg-muted" {...props} />,
+    thead: ({ node, ...props }) => <thead className="bg-secondary" {...props} />,
     th: ({ node, ...props }) => <th className="border border-border px-3 py-2 text-left font-medium" {...props} />,
     td: ({ node, ...props }) => <td className="border border-border px-3 py-2" {...props} />,
-    input: ({ node, ...props }) => <input className="mr-2 accent-primary" disabled type="checkbox" {...props} />,
+    input: ({ node, ...props }) => <input className="mr-2 accent-foreground" disabled type="checkbox" {...props} />,
     hr: ({ node, ...props }) => <hr className="my-8 border-border" {...props} />,
-    img: ({ node, alt, ...props }) => <img alt={alt} className="rounded-lg my-6 w-full" {...props} />,
+    img: ({ node, alt, ...props }) => <img alt={alt} className="rounded-sm my-6 w-full" {...props} />,
   }
 }
 

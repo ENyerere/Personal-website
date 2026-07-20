@@ -6,10 +6,10 @@ interface TableOfContentsProps {
 }
 
 /**
- * 文章页右栏目录(fuwari 风格)
+ * 文章页右栏目录(hairline 风格)
  * - 2xl 断点显示、sticky 定位(由外层布局控制)
- * - IntersectionObserver 追踪当前阅读章节并高亮
- * - 点击平滑滚动,prefers-reduced-motion 时退化为瞬时跳转
+ * - 当前章节:字重 + 左侧短粗线指示,不用色块
+ * - IntersectionObserver 追踪阅读位置;点击平滑滚动,reduced-motion 时瞬时跳转
  */
 export default function TableOfContents({ items }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? '')
@@ -46,9 +46,9 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
   }
 
   return (
-    <nav aria-label="文章目录" className="card-base p-5">
-      <div className="font-bold text-base mb-3 text-foreground">目录</div>
-      <ul className="space-y-1 text-sm">
+    <nav aria-label="文章目录">
+      <div className="font-mono text-xs tracking-[0.08em] text-muted-foreground mb-4">目录</div>
+      <ul className="space-y-0.5 text-sm border-l border-border">
         {items.map((item) => {
           const active = item.id === activeId
           return (
@@ -58,11 +58,11 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
                 onClick={scrollToHeading(item.id)}
                 aria-current={active ? 'location' : undefined}
                 className={[
-                  'block py-1 border-l-2 transition-colors leading-6',
-                  item.depth === 3 ? 'pl-7' : 'pl-3',
+                  'block py-1.5 -ml-px border-l-2 transition-colors leading-6',
+                  item.depth === 3 ? 'pl-8' : 'pl-4',
                   active
-                    ? 'border-primary text-primary font-medium'
-                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border',
+                    ? 'border-foreground text-foreground font-medium'
+                    : 'border-transparent text-muted-foreground hover:text-foreground',
                 ].join(' ')}
               >
                 {item.text}

@@ -5,40 +5,48 @@ interface ArchiveTimelineProps {
   archives: { year: number; posts: Post[] }[]
 }
 
+/**
+ * 归档时间线(行式):年份分组,组内条目为 等宽日期 + 标题链接,
+ * hairline 分隔,与首页条目共用同一套行语言。
+ */
 export default function ArchiveTimeline({ archives }: ArchiveTimelineProps) {
   if (archives.length === 0) {
     return (
-      <div className="card-base py-16 text-center">
-        <p className="text-muted-foreground">还没有文章。</p>
+      <div className="py-16 border-y border-border">
+        <p className="text-muted-foreground font-mono text-sm">还没有文章。</p>
       </div>
     )
   }
   return (
-    <div className="space-y-4">
-      {archives.map(({ year, posts }, index) => (
-        <div
-          key={year}
-          className="card-base p-6 md:p-9 animate-fade-up"
-          style={{ animationDelay: `calc(var(--content-delay) + ${index + 1} * 50ms)` }}
-        >
-          <h2 className="text-2xl font-bold mb-6">
-            {year}
-            <span className="ml-2 text-base font-normal text-muted-foreground">{posts.length} 篇</span>
+    <div className="space-y-12">
+      {archives.map(({ year, posts }, groupIndex) => (
+        <section key={year}>
+          <h2 className="flex items-baseline gap-3 mb-2">
+            <span className="text-xl font-semibold">{year}</span>
+            <span className="font-mono text-xs text-muted-foreground">{posts.length} 篇</span>
           </h2>
-          <ul>
-            {posts.map(post => {
-              const date = new Date(post.createdAt).toLocaleDateString('zh-CN', { month: 'long', day: 'numeric' })
-              return (
-                <li key={post.id} className="flex items-baseline gap-4 py-3 border-b border-border/60 last:border-0">
-                  <span className="text-sm text-muted-foreground whitespace-nowrap w-20">{date}</span>
-                  <Link to={`/posts/${post.slug}`} className="text-foreground/90 hover:text-primary transition-colors">
-                    {post.title}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </div>
+          <div className="divide-y divide-border border-y border-border">
+            {posts.map((post, index) => (
+              <div
+                key={post.id}
+                className="animate-fade-up py-4 md:grid md:grid-cols-[7rem_1fr] md:gap-6"
+                style={{
+                  animationDelay: `calc(var(--content-delay) + ${groupIndex * 2 + index} * 100ms)`,
+                }}
+              >
+                <span className="font-mono text-sm text-muted-foreground block mb-1 md:mb-0 md:pt-0.5">
+                  {post.createdAt.slice(5, 10)}
+                </span>
+                <Link
+                  to={`/posts/${post.slug}`}
+                  className="font-medium text-foreground hover:underline underline-offset-4"
+                >
+                  {post.title}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </section>
       ))}
     </div>
   )
