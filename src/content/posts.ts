@@ -54,6 +54,7 @@ function toPost(path: string, raw: string): Post | null {
     createdAt,
     updatedAt: toIso(String(data.updatedAt || ''), createdAt),
     published: data.published !== false,
+    series: data.series ? String(data.series) : undefined,
     revision: toRevision(filename),
   }
 }

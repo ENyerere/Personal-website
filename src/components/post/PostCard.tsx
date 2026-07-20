@@ -1,5 +1,12 @@
 import { Link } from 'react-router-dom'
 import type { Post } from '@/store/postStore'
+import { usePostStore, getSeriesInfo } from '@/store/postStore'
+
+/** 系列序号的中文表述:其一 / 其二 / … */
+const CN_NUMERALS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
+function seriesOrdinal(n: number): string {
+  return n >= 1 && n <= 10 ? `其${CN_NUMERALS[n - 1]}` : `第 ${n} 篇`
+}
 
 interface PostCardProps {
   post: Post
@@ -15,6 +22,8 @@ interface PostCardProps {
  * 桌面端奇数条目右移 2rem,呼应「散落手稿」的错落节奏。
  */
 export default function PostCard({ post, index, dimmed = false }: PostCardProps) {
+  const posts = usePostStore((state) => state.posts)
+  const series = getSeriesInfo(posts, post)
   const date = post.createdAt.slice(0, 10)
   const wordCount = post.content.replace(/\s+/g, '').length
   const readTime = Math.max(1, Math.ceil(wordCount / 300))
@@ -56,6 +65,18 @@ export default function PostCard({ post, index, dimmed = false }: PostCardProps)
             <span>{wordCount} 字</span>
             <span aria-hidden="true">/</span>
             <span>{readTime} 分钟</span>
+            {/* 系列标注:系列名 · 序号,链到合集页 */}
+            {series && (
+              <>
+                <span aria-hidden="true">/</span>
+                <Link
+                  to={`/series/${encodeURIComponent(series.name)}`}
+                  className="hover:text-foreground hover:underline underline-offset-2"
+                >
+                  {series.name} · {seriesOrdinal(series.index)}
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

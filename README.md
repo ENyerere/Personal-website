@@ -28,6 +28,7 @@ tags: [随笔, 个人]        # 可选,行内数组;也支持 `-` 块级列表
 createdAt: 2025-03-15     # 必填,YYYY-MM-DD
 updatedAt: 2025-03-20     # 可选,默认等于 createdAt
 published: false          # 可选,默认 true;false 时为草稿不上线
+series: 博客改造日志      # 可选,所属系列名;同系列文章自动串联并生成 /series/ 合集页
 ---
 
 正文从这里开始。注意:**正文不要重复写一级标题**,

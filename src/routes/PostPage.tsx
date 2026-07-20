@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { usePostStore, getPostBySlug, getPosts } from '@/store/postStore'
+import { usePostStore, getPostBySlug, getPosts, getSeriesPosts } from '@/store/postStore'
 import PostContent from '@/components/post/PostContent'
 import TableOfContents from '@/components/post/TableOfContents'
 import LineReveal from '@/components/LineReveal'
@@ -28,10 +28,20 @@ export default function PostPage() {
   }
 
   const date = post.createdAt.slice(0, 10)
-  const sortedPosts = getPosts(posts)
+  const sortedPosts = getPosts(posts) // 全站按日期倒序
   const currentIndex = sortedPosts.findIndex(p => p.slug === post.slug)
-  const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null
-  const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null
+  // 全站前后篇:older = 更早发布(上一篇),newer = 更新发布(下一篇)
+  const globalOlder = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null
+  const globalNewer = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null
+  // 系列感知:系列内前后篇优先,走到系列边界才退回全站
+  const seriesList = post.series ? getSeriesPosts(posts, post.series) : []
+  const seriesIndex = seriesList.findIndex(p => p.slug === post.slug)
+  const seriesInfo = seriesIndex === -1 ? null : { index: seriesIndex + 1, total: seriesList.length }
+  const olderPost = seriesIndex > 0 ? seriesList[seriesIndex - 1] : globalOlder
+  const newerPost =
+    seriesIndex !== -1 && seriesIndex < seriesList.length - 1
+      ? seriesList[seriesIndex + 1]
+      : globalNewer
   const wordCount = post.content.replace(/\s+/g, '').length
   const readTime = Math.max(1, Math.ceil(wordCount / 300))
 
@@ -76,6 +86,22 @@ export default function PostPage() {
                 ]
               </span>
             </div>
+            {/* 所属系列:系列名链到合集页,标注序号 */}
+            {seriesInfo && post.series && (
+              <div className="flex">
+                <span className="w-[6em] shrink-0 text-muted-foreground">series:</span>
+                <span>
+                  [
+                  <Link
+                    to={`/series/${encodeURIComponent(post.series)}`}
+                    className="hover:underline underline-offset-2"
+                  >
+                    {post.series}
+                  </Link>
+                  ] <span className="text-muted-foreground">第 {seriesInfo.index} / {seriesInfo.total} 篇</span>
+                </span>
+              </div>
+            )}
             <div className="flex">
               <span className="w-[6em] shrink-0 text-muted-foreground">words:</span>
               <span>{wordCount}</span>
@@ -115,26 +141,26 @@ export default function PostPage() {
           </div>
         </article>
 
-        {/* 上一篇/下一篇:hairline 文字链接行 */}
-        {(prevPost || nextPost) && (
+        {/* 上一篇/下一篇:hairline 文字链接行,系列内优先 */}
+        {(olderPost || newerPost) && (
           <nav className="border-t border-border mt-16 pt-6 flex justify-between gap-6 text-sm">
-            {nextPost ? (
-              <Link to={`/posts/${nextPost.slug}`} className="group max-w-[45%]">
+            {olderPost ? (
+              <Link to={`/posts/${olderPost.slug}`} className="group max-w-[45%]">
                 <span className="font-mono text-xs text-muted-foreground flex items-center gap-1 mb-1.5">
                   <ArrowLeft className="h-3 w-3" />上一篇
                 </span>
                 <span className="group-hover:underline underline-offset-4 line-clamp-2">
-                  {nextPost.title}
+                  {olderPost.title}
                 </span>
               </Link>
             ) : <span />}
-            {prevPost ? (
-              <Link to={`/posts/${prevPost.slug}`} className="group max-w-[45%] text-right ml-auto">
+            {newerPost ? (
+              <Link to={`/posts/${newerPost.slug}`} className="group max-w-[45%] text-right ml-auto">
                 <span className="font-mono text-xs text-muted-foreground flex items-center justify-end gap-1 mb-1.5">
                   下一篇<ArrowRight className="h-3 w-3" />
                 </span>
                 <span className="group-hover:underline underline-offset-4 line-clamp-2">
-                  {prevPost.title}
+                  {newerPost.title}
                 </span>
               </Link>
             ) : <span />}

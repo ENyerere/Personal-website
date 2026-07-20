@@ -11,6 +11,8 @@ export interface Post {
   createdAt: string // ISO 8601 字符串
   updatedAt: string // ISO 8601 字符串
   published: boolean
+  /** 所属系列名;未设置则不参与任何系列 */
+  series?: string
   /** 版本信息:hash 为空串表示未提交(draft);null 表示 git 不可用(页面隐藏 rev 行) */
   revision: { hash: string; count: number; historyUrl: string } | null
 }
@@ -52,6 +54,24 @@ export function getPostBySlug(posts: Post[], slug: string): Post | undefined {
 // 按标签获取文章
 export function getPostsByTag(posts: Post[], tag: string): Post[] {
   return getPosts(posts).filter((p) => p.tags.includes(tag))
+}
+
+// 按系列获取文章,按 createdAt 正序(第 1 篇在前,符合阅读顺序)
+export function getSeriesPosts(posts: Post[], series: string): Post[] {
+  return posts
+    .filter((p) => p.published && p.series === series)
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+}
+
+// 文章在所属系列中的位置;不属于任何系列返回 null
+export function getSeriesInfo(
+  posts: Post[],
+  post: Post,
+): { name: string; index: number; total: number } | null {
+  if (!post.series) return null
+  const list = getSeriesPosts(posts, post.series)
+  const index = list.findIndex((p) => p.slug === post.slug)
+  return index === -1 ? null : { name: post.series, index: index + 1, total: list.length }
 }
 
 // 获取所有标签(去重,按文章数倒序)

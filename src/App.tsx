@@ -5,6 +5,7 @@ import PostPage from '@/routes/PostPage'
 import ArchivesPage from '@/routes/ArchivesPage'
 import TagsPage from '@/routes/TagsPage'
 import TagPage from '@/routes/TagPage'
+import SeriesPage from '@/routes/SeriesPage'
 import AboutPage from '@/routes/AboutPage'
 import NotFoundPage from '@/routes/NotFoundPage'
 
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: 'archives', element: <ArchivesPage /> },
       { path: 'tags', element: <TagsPage /> },
       { path: 'tags/:tag', element: <TagPage /> },
+      { path: 'series/:name', element: <SeriesPage /> },
       { path: 'about', element: <AboutPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],

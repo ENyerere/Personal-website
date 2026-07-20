@@ -3,6 +3,7 @@ title: 博客上线记:写作即提交
 slug: blog-relaunch-pipeline
 excerpt: 博客换上了「手稿档案」的新装,并接入了 GitHub Pages 自动部署。现在写一篇 Markdown、一次 git push,就是一次发布。
 tags: [博客, 部署, 写作]
+series: 博客改造日志
 createdAt: 2026-07-20
 ---
 
