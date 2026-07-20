@@ -52,7 +52,21 @@ function createComponents(idMap: Map<number, string>): Components {
     td: ({ node, ...props }) => <td className="border border-border px-3 py-2" {...props} />,
     input: ({ node, ...props }) => <input className="mr-2 accent-foreground" disabled type="checkbox" {...props} />,
     hr: ({ node, ...props }) => <hr className="my-8 border-border" {...props} />,
-    img: ({ node, alt, ...props }) => <img alt={alt} className="rounded-sm my-6 w-full" {...props} />,
+    // 图片加载失败:替换为单色文字占位,不露出浏览器破图 icon
+    img: ({ node, alt, ...props }) => (
+      <img
+        alt={alt}
+        className="rounded-sm my-6 w-full"
+        onError={(e) => {
+          const fallback = document.createElement('span')
+          fallback.className =
+            'block my-6 border border-border px-4 py-8 text-center font-mono text-sm text-muted-foreground'
+          fallback.textContent = alt ? `[图片:${alt}]` : '[图片]'
+          e.currentTarget.replaceWith(fallback)
+        }}
+        {...props}
+      />
+    ),
   }
 }
 

@@ -45,7 +45,6 @@
 
     /* 圆角语言:无圆角至 2px */
     --radius: 2px;
-    --radius-large: 2px;
 
     /* 容器与动效基准 */
     --page-width: 72rem;
@@ -127,26 +126,6 @@
 }
 
 @layer components {
-  /* 过渡形态:旧卡片面变为 hairline 区块(新页面不再使用,随迁移逐步移除) */
-  .card-base {
-    border: 1px solid rgb(var(--border));
-    border-radius: var(--radius-large);
-    background-color: rgb(var(--card));
-    transition: background-color 0.15s;
-  }
-  .btn-regular {
-    transition:
-      background-color 0.15s,
-      color 0.15s;
-    background-color: rgb(var(--secondary));
-    color: rgb(var(--secondary-foreground));
-    border-radius: var(--radius);
-  }
-  .btn-regular:hover {
-    background-color: rgb(var(--accent));
-    color: rgb(var(--accent-foreground));
-  }
-
   /* bracket 过滤器约定:激活态用 > < 包裹(配合 aria-pressed) */
   .bracket-active::before {
     content: '>\00a0';
