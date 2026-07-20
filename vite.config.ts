@@ -65,6 +65,8 @@ function postRevisionsPlugin(): Plugin {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // GitHub Pages 部署在 /easy-web/ 子路径;本地预览保持根路径
+  base: process.env.VITE_BASE ?? '/',
   plugins: [react(), postRevisionsPlugin()],
   resolve: {
     alias: {
