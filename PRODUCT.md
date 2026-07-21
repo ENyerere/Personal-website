@@ -177,7 +177,14 @@ brand
 - **托管**:GitHub Pages,https://enyerere.github.io/Personal-website/ ;push main 经 GitHub Actions 自动构建部署(`.github/workflows/deploy.yml`)
 - **子路径**:Pages 构建注入 `VITE_BASE=/Personal-website/`;本地预览保持根路径。`index.html` 中的静态资源引用(favicon、manifest、feed)一律用绝对地址——SPA 深链接下根相对路径会解析错误
 - **SPA 深链接**:`public/404.html` 编码 + `index.html` 解码脚本回退
-- **构建期注入**:文章 git 版本(virtual:post-revisions,checkout 需 `fetch-depth: 0`)+ `dist/feed.xml`(RSS 2.0,最新 20 篇已发布文章)
+- **构建期注入**:文章 git 版本(virtual:post-revisions,checkout 需 `fetch-depth: 0`)、`dist/feed.xml`(RSS 2.0,最新 20 篇已发布文章)、GitHub 活数据(virtual:github-projects / virtual:github-languages,API 失败降级为配置信息,构建不中断)
+- **定时重建**:每周一 03:17 UTC 触发,刷新关于页的 GitHub 项目与语言数据,无需 push 代码
+
+### 关于页 GitHub 数据约定
+
+- **项目策展**:展示名单维护在 `src/data/projects.ts`(`repo` + 可选中文描述覆盖);语言/star/更新时间/链接构建期自动补齐;fork 不入名单;star 为 0 不展示
+- **语言占比**:聚合全部**非 fork** 仓库的 Linguist 字节数,Top 6 + 「其他」;口径明确标注「按 GitHub 代码量」——它反映编码活动而非熟练度;API 不可用时回退 `fallbackLanguages` 手写清单
+- **技能方向**:语言之外的能力维度(如软件测试)人工策展于 `disciplines`,与语言区分离
 
 ## Migration Notes(从现风格迁移的影响面)
 
