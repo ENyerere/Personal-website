@@ -235,6 +235,20 @@
   background: rgb(var(--muted-foreground) / 0.5);
 }
 
+/* 主题切换圆形扩散(View Transitions API):
+ * 关掉默认交叉淡入,让新主题快照置于上层,由 JS 播放 circle clip-path */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2147483646;
+}
+
 /* 尊重 reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *,
