@@ -11,3 +11,14 @@ declare module 'virtual:post-revisions' {
   }
   export default value
 }
+
+declare module 'virtual:github-projects' {
+  import type { Project } from '@/data/projects'
+  const value: Project[]
+  export default value
+}
+
+declare module 'virtual:github-languages' {
+  const value: { name: string; percent: number }[]
+  export default value
+}

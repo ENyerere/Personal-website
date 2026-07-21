@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # 每周一 03:17 UTC 定时重建:刷新关于页的 GitHub 项目活数据
+  schedule:
+    - cron: '17 3 * * 1'
   workflow_dispatch:
 
 permissions:

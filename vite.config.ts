@@ -4,6 +4,7 @@ import path from 'path'
 import { execSync } from 'node:child_process'
 import { readdirSync, readFileSync } from 'node:fs'
 import { parseFrontMatter } from './src/lib/frontMatter'
+import { projectConfigs, type Project } from './src/data/projects'
 
 /**
  * F4 版本历史:构建期为每篇文章取 git 短 hash 与修订次数,
@@ -136,10 +137,120 @@ ${itemXml}
   }
 }
 
+/**
+ * 关于页 GitHub 数据:构建期拉取仓库活数据,经虚拟模块注入前端。
+ * - virtual:github-projects:按 projectConfigs 策展名单组装项目展示
+ * - virtual:github-languages:聚合全部非 fork 仓库的语言字节数,输出占比 Top 6 + 其他
+ * 降级策略:API 不可用(离线/限流)→ 项目仅配置信息、语言为空数组(前端回退手写清单)。
+ */
+const GITHUB_PROJECTS_ID = 'virtual:github-projects'
+const GITHUB_LANGUAGES_ID = 'virtual:github-languages'
+const RESOLVED_PROJECTS_ID = '\0' + GITHUB_PROJECTS_ID
+const RESOLVED_LANGUAGES_ID = '\0' + GITHUB_LANGUAGES_ID
+
+interface GhRepo {
+  name: string
+  description: string | null
+  html_url: string
+  language: string | null
+  stargazers_count: number
+  pushed_at: string
+  fork: boolean
+}
+
+function githubDataPlugin(): Plugin {
+  // 同一次构建内共享仓库列表,避免重复请求
+  let reposPromise: Promise<GhRepo[]> | null = null
+
+  async function fetchRepos(): Promise<GhRepo[]> {
+    let owner = 'ENyerere'
+    try {
+      const remote = git('config --get remote.origin.url')
+      owner = /github\.com[:/]([^/]+)/.exec(remote)?.[1] ?? owner
+    } catch {
+      // 保留默认
+    }
+    try {
+      const res = await fetch(`https://api.github.com/users/${owner}/repos?per_page=100`, {
+        headers: { 'User-Agent': 'easy-web-build', Accept: 'application/vnd.github+json' },
+      })
+      if (res.ok) return (await res.json()) as GhRepo[]
+    } catch {
+      // 离线/限流:返回空,调用方自动降级
+    }
+    return []
+  }
+
+  return {
+    name: 'github-data',
+    resolveId(id) {
+      if (id === GITHUB_PROJECTS_ID) return RESOLVED_PROJECTS_ID
+      if (id === GITHUB_LANGUAGES_ID) return RESOLVED_LANGUAGES_ID
+    },
+    async load(id) {
+      if (id !== RESOLVED_PROJECTS_ID && id !== RESOLVED_LANGUAGES_ID) return null
+      reposPromise ??= fetchRepos()
+      const repos = await reposPromise
+      const live = new Map(repos.map((r) => [r.name, r]))
+
+      if (id === RESOLVED_PROJECTS_ID) {
+        const owner = repos[0]?.html_url.match(/github\.com\/([^/]+)/)?.[1] ?? 'ENyerere'
+        const projects: Project[] = projectConfigs.map((c) => {
+          const r = live.get(c.repo)
+          return {
+            repo: c.repo,
+            title: c.title ?? c.repo,
+            description: c.description ?? r?.description ?? '',
+            url: r?.html_url ?? `https://github.com/${owner}/${c.repo}`,
+            language: r?.language ?? null,
+            stars: r?.stargazers_count ?? 0,
+            pushedAt: r?.pushed_at ?? '',
+          }
+        })
+        return `export default ${JSON.stringify(projects)}`
+      }
+
+      // 语言占比:逐仓库拉 linguist 字节数聚合,fork 不计(避免算上别人的代码)
+      const ownRepos = repos.filter((r) => !r.fork).slice(0, 30)
+      const totals = new Map<string, number>()
+      await Promise.all(
+        ownRepos.map(async (r) => {
+          try {
+            const res = await fetch(
+              `https://api.github.com/repos/${r.html_url.replace('https://github.com/', '')}/languages`,
+              { headers: { 'User-Agent': 'easy-web-build', Accept: 'application/vnd.github+json' } },
+            )
+            if (!res.ok) return
+            const langs = (await res.json()) as Record<string, number>
+            for (const [lang, bytes] of Object.entries(langs)) {
+              totals.set(lang, (totals.get(lang) ?? 0) + bytes)
+            }
+          } catch {
+            // 单仓库失败不影响整体
+          }
+        }),
+      )
+      const totalBytes = Array.from(totals.values()).reduce((a, b) => a + b, 0)
+      const sorted = Array.from(totals.entries()).sort((a, b) => b[1] - a[1])
+      const top = sorted.slice(0, 6)
+      const restBytes = sorted.slice(6).reduce((sum, [, b]) => sum + b, 0)
+      const languages = top.map(([name, bytes]) => ({
+        name,
+        percent: totalBytes > 0 ? Math.round((bytes / totalBytes) * 100) : 0,
+      }))
+      if (restBytes > 0 && totalBytes > 0) {
+        const percent = Math.round((restBytes / totalBytes) * 100)
+        if (percent > 0) languages.push({ name: '其他', percent })
+      }
+      return `export default ${JSON.stringify(languages)}`
+    },
+  }
+}
+
 export default defineConfig({
   // GitHub Pages 部署在 /Personal-website/ 子路径;本地预览保持根路径
   base: process.env.VITE_BASE ?? '/',
-  plugins: [react(), postRevisionsPlugin(), rssFeedPlugin()],
+  plugins: [react(), postRevisionsPlugin(), rssFeedPlugin(), githubDataPlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
